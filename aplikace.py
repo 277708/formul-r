@@ -6,18 +6,18 @@ machines_df = pd.read_excel("zoznamy.xlsx", sheet_name="STROJE")
 clients_df = pd.read_excel("zoznamy.xlsx", sheet_name="KLIENTI")
 
 # Filtr dostupných strojů
-machines_df = machines_df[machines_df['E'] == "ANO"].reset_index(drop=True)
+machines_df = machines_df[machines_df['dostupnosť'] == "ANO"].reset_index(drop=True)
 
 st.title("Půjčovna strojů")
 
 # Výběr klienta
-client_name = st.selectbox("Vyberte klienta", options=list(clients_df['A']))
+client_name = st.selectbox("Vyberte klienta", options=list(clients_df['název firmy']))
 
 # Výběr strojů
 st.write("Vyberte stroje (dostupné):")
 selected_machines = st.multiselect(
     "Stroje", 
-    options=[f"{row['A']} - {row['C']} ({row['D']} Kč/den)" for i, row in machines_df.iterrows()]
+    options=[f"{row['názov']} - {row['popis']} ({row['cena [kč]/den']} Kč/den)" for i, row in machines_df.iterrows()]
 )
 
 # Počet dní
@@ -28,13 +28,14 @@ if st.button("Spočítat půjčovné"):
     if not client_name or not selected_machines:
         st.warning("Vyberte klienta a alespoň jeden stroj!")
     else:
-        client_discount = clients_df.loc[clients_df['A'] == client_name, 'D'].values[0]
+        client_discount = clients_df.loc[clients_df['název firmy'] == client_name, 'sleva'].values[0]
         total_price = 0
         for machine_text in selected_machines:
             # najdeme index stroje podle názvu
             machine_name = machine_text.split(" - ")[0]
-            price_per_day = machines_df.loc[machines_df['A'] == machine_name, 'D'].values[0]
+            price_per_day = machines_df.loc[machines_df['názov'] == machine_name, 'cena [kč]/den'].values[0]
             total_price += price_per_day * days
         
         total_price = total_price * (1 - client_discount / 100)
         st.success(f"Celková cena půjčovného: {total_price:.2f} Kč")
+
