@@ -11,7 +11,7 @@ machines_df = machines_df[machines_df['dostupnosť'] == "ANO"].reset_index(drop=
 st.title("Půjčovna strojů")
 
 # Výběr klienta
-client_name = st.selectbox("Vyberte klienta", options=list(clients_df['název firmy']))
+client_name = st.selectbox("název klientské firmy", options=list(clients_df['název firmy']))
 
 # Výběr strojů
 st.write("Vyberte stroje (dostupné):")
@@ -38,4 +38,5 @@ if st.button("Spočítat půjčovné"):
         
         total_price = total_price * (1 - client_discount / 100)
         st.success(f"Celková cena půjčovného: {total_price:.2f} Kč")
+
 
