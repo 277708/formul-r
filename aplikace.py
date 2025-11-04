@@ -15,10 +15,10 @@ client_name = st.selectbox("název klientské firmy", options=list(clients_df['n
 
 if client_name:
     client_discount = clients_df.loc[clients_df['název firmy'] == client_name, 'sleva'].values[0]
-    st.info(f"Sleva pro vaši firmu: **{client_discount}%**")
+    st.info(f"Sleva pro vaši firmu: **{client_discount} %**")
 
 # Výběr strojů
-st.write("Vyberte stroje (dostupné):")
+st.write("Vyberte stroje (zobrazují se pouze aktuálne dostupné):")
 selected_machines = st.multiselect(
     "Stroje", 
     options=[f"{row['názov']} - {row['popis']} ({row['cena [kč]/den']} Kč/den)" for i, row in machines_df.iterrows()]
@@ -42,6 +42,7 @@ if st.button("Spočítat půjčovné"):
         
         total_price = total_price * (1 - client_discount / 100)
         st.success(f"Celková cena půjčovného: {total_price:.2f} Kč")
+
 
 
 
